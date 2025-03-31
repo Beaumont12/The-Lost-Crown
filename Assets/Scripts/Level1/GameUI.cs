@@ -15,7 +15,7 @@ public class GameUI : MonoBehaviour
     public Button levelSelectButton;
 
     private int coinsCollected = 0;
-    private float levelTimer = 120f; // Start at 120 seconds (2 minutes)
+    private float levelTimer = 240f; // Start at 120 seconds (2 minutes)
     private bool isPaused = false;
 
     void Start()

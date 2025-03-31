@@ -192,4 +192,42 @@ public class HeroKnight : MonoBehaviour {
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
     }
+
+    void AE_AttackHit()
+    {
+        float attackRange = 0.8f;
+        Vector2 attackOrigin = transform.position + new Vector3(m_facingDirection * 1f, 0, 0);
+
+        // Get all colliders within the attack range
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackOrigin, attackRange);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.CompareTag("Enemy")) // Make sure your enemies are tagged as "Enemy"
+            {
+                // Check if the hit object has the GolemAI component
+                if (hit.GetComponent<GolemAI>() != null)
+                {
+                    // Deal damage to the Golem
+                    hit.GetComponent<GolemAI>().TakeDamage();
+                    UnityEngine.Debug.Log("Dealing damage to Golem.");
+                }
+                // Check if the hit object has the SlimeAI component
+                else if (hit.GetComponent<SlimeAI>() != null)
+                {
+                    // Deal damage to the Slime
+                    hit.GetComponent<SlimeAI>().TakeDamage();
+                    UnityEngine.Debug.Log("Dealing damage to Slime.");
+                }
+                // Check if the hit object has the DemonAI component
+                else if (hit.GetComponent<DemonAI>() != null)
+                {
+                    // Deal damage to the Demon
+                    hit.GetComponent<DemonAI>().TakeDamage();
+                    UnityEngine.Debug.Log("Dealing damage to Demon.");
+                }
+            }
+        }
+    }
+
 }

@@ -13,7 +13,7 @@ public class CoinCollect : MonoBehaviour
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
 
             // Update coins in UI
-            GameUI gameUI = FindObjectOfType<GameUI>();
+            GameUI gameUI = Object.FindFirstObjectByType<GameUI>();
             if (gameUI != null)
             {
                 gameUI.AddCoin();

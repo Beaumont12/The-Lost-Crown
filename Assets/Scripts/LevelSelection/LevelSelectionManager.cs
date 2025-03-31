@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-using System.Diagnostics;
+using System;
 
 public class LevelSelectionManager : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class LevelSelectionManager : MonoBehaviour
 
     void Start()
     {
+        ResetPlayerPrefs(); // Reset PlayerPrefs at the start
+
         StartCoroutine(FindSceneTransition());
 
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
@@ -31,13 +33,33 @@ public class LevelSelectionManager : MonoBehaviour
         }
     }
 
+    // Reset PlayerPrefs (level and coins) when starting the game
+    void ResetPlayerPrefs()
+    {
+        // Check if the game is being started for the first time
+        if (!PlayerPrefs.HasKey("FirstPlay"))
+        {
+            // Set "FirstPlay" to true so it won't reset again after the first launch
+            PlayerPrefs.SetInt("FirstPlay", 1);
+
+            // Reset coins (optional, if you want to reset coins too)
+            PlayerPrefs.SetInt("TotalCoins", 0);
+
+            // Set the unlocked level to 1 (Level 1 unlocked at the start)
+            PlayerPrefs.SetInt("UnlockedLevel", 1);
+
+            // Save the PlayerPrefs
+            PlayerPrefs.Save();
+        }
+    }
+
     IEnumerator FindSceneTransition()
     {
         // Wait a frame to allow objects to initialize
         yield return null;
 
         // Try to find SceneTransition normally
-        sceneTransition = FindObjectOfType<SceneTransition>();
+        sceneTransition = UnityEngine.Object.FindFirstObjectByType<SceneTransition>();
 
         // If not found, force search inside "FadeCanvas"
         if (sceneTransition == null)
@@ -83,5 +105,16 @@ public class LevelSelectionManager : MonoBehaviour
         }
 
         sceneTransition.ChangeScene("MainMenu");
+    }
+
+    public void GoToHighScoreScene()
+    {
+        if (sceneTransition == null)
+        {
+            UnityEngine.Debug.LogError("SceneTransition object is missing! Cannot go to High Score scene.");
+            return;
+        }
+
+        sceneTransition.ChangeScene("HighScore");
     }
 }
